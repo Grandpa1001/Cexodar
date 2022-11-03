@@ -12,6 +12,8 @@ export const GlobalContextProvider = ({ children }) => {
     const [provider, setProvider] = useState('');
     const [contract, setContract] = useState('');
     const [showAlert, setShowAlert] = useState({status: false, type: 'info', message: ''});
+    const [battleName, setBattleName] = useState('');
+
     const navigate = useNavigate();
 
     //* Set the wallet addres
@@ -31,6 +33,7 @@ useEffect(()=> {updateCurrentWalletAddress();
 useEffect(()=> {
     const setSmartContractAndProvider = async () =>{
         const web3Modal = new Web3Modal();
+        await timeout(1000);
         const connection = await web3Modal.connect();
         const newProvider = new ethers.providers.Web3Provider (connection);
         const signer = newProvider.getSigner();
@@ -65,14 +68,17 @@ useEffect(()=> {
     return (
         <GlobalContext.Provider value={{
             contract, walletAddress,
-            showAlert, setShowAlert
-
+            showAlert, setShowAlert,
+            battleName, setBattleName,
         }}>
             {children}
         </GlobalContext.Provider>
     )
 }
 
-
+// function wait for/delay for comunication
+function timeout(delay) {
+    return new Promise( res => setTimeout(res, delay) );
+}
 
 export const useGlobalContext = () => useContext (GlobalContext);
