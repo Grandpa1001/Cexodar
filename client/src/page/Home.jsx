@@ -40,6 +40,9 @@ useEffect(() => {
     const playerTokenExists = await contract.isPlayerToken(walletAddress);
 
 
+    console.log({
+      playerExists,playerTokenExists
+    })
 
     if(playerExists && playerTokenExists) navigate('/create-battle');
   }
