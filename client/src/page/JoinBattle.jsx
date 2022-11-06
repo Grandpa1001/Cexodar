@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useGlobalContext } from '../context';
@@ -6,24 +6,32 @@ import { CustomButton, PageHOC } from '../components';
 import styles from '../styles';
 
 const JoinBattle = () => {
-  const {contract, gameData, setShowAlert, setBattleName, walletAddress } = useGlobalContext();
-    const navigate = useNavigate();
-    const handleClick = async (battleName) =>{
-      setBattleName(battleName);
+  const navigate = useNavigate();
+  const { contract, gameData, setShowAlert, setBattleName, setErrorMessage, walletAddress } = useGlobalContext();
 
-      try{
-        await contract.joinBattle(battleName);
+  useEffect(() => {
+    if (gameData?.activeBattle?.battleStatus === 1) navigate(`/battle/${gameData.activeBattle.name}`);
+  }, [gameData]);
 
-        setShowAlert({ status:true, type: 'success', message: `Joing ${battleName}`})
-      }catch (error){
-        console.log(error);
-      }
+  const handleClick = async (battleName) => {
+    setBattleName(battleName);
+
+    try {
+      await contract.joinBattle(battleName);
+      
+      setShowAlert({ status: true, type: 'success', message: `Joining ${battleName}` });
+      console.log(`Dołączyłeś do ${battleName}`)
+ 
+    } catch (error) {
+      setErrorMessage(error);
     }
+  };
+
   return (
     <>
-    <h2 className={styles.joinHeadText}>Available Battles:</h2>
+      <h2 className={styles.joinHeadText}>Available Battles:</h2>
 
-    <div className={styles.joinContainer}>
+      <div className={styles.joinContainer}>
         {gameData.pendingBattles.length
           ? gameData.pendingBattles
             .filter((battle) => !battle.players.includes(walletAddress) && battle.battleStatus !== 1)
@@ -40,14 +48,15 @@ const JoinBattle = () => {
           )}
       </div>
 
-
-    <p className={styles.infoText} onClick={() => navigate('/create-battle')}>Or create a new battle</p>
+      <p className={styles.infoText} onClick={() => navigate('/create-battle')}>
+        Or create a new battle
+      </p>
     </>
-  )
-}
+  );
+};
 
 export default PageHOC(
-    JoinBattle,
-    <>Join <br /> a Battle</>,
-    <>Join already existing battles</>
-)
+  JoinBattle,
+  <>Join <br /> a Battle</>,
+  <>Join already existing battles</>,
+);
