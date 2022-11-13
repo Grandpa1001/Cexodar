@@ -52,8 +52,8 @@ const Battle = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (!gameData?.activeBattle) navigate('/');
-    }, [1000]);
+      if (!gameData?.activeBattle)  navigate('/');
+    }, [300]);
 
     return () => clearTimeout(timer);
   }, []);
@@ -63,7 +63,7 @@ const Battle = () => {
     playAudio(choice === 1 ? attackSound : defenseSound);
 
     try {
-      await contract.attackOrDefendChoice(choice, battleName, { gasLimit: 200000 });
+      await contract.attackOrDefendChoice(choice, battleName, { gasLimit: 400000 });
 
       setShowAlert({
         status: true,

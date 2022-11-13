@@ -77,7 +77,7 @@ export const GlobalContextProvider = ({ children }) => {
       setContract(newContract);
     };
 
-    const timer = setTimeout(() => setSmartContractAndProvider(), 300);
+    setSmartContractAndProvider();
 
     return () => clearTimeout();
   }, []);
@@ -126,7 +126,7 @@ export const GlobalContextProvider = ({ children }) => {
     if (showAlert?.status) {
       const timer = setTimeout(() => {
         setShowAlert({ status: false, type: 'info', message: '' });
-      }, [5000]);
+      }, [3000]);
 
       return () => clearTimeout(timer);
     }
